@@ -1,0 +1,31 @@
+{
+  "name": "silencegarden-server",
+  "version": "1.0.0",
+  "description": "silencegarden server simulation datas",
+  "main": "index.js",
+  "scripts": {
+    "dev": "babel-node src/index.js"
+  },
+  "keywords": [
+    "silencegarden"
+  ],
+  "author": "zzp",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "express": "^4.15.4",
+    "generic-pool": "^3.4.2",
+    "mongodb": "^3.0.5",
+    "mysql": "^2.14.1"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
+    "babel-plugin-transform-es2015-destructuring": "^6.23.0",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.26.0",
+    "babel-plugin-transform-es2015-parameters": "^6.24.1",
+    "babel-plugin-transform-es2015-spread": "^6.22.0",
+    "babel-plugin-transform-strict-mode": "^6.24.1",
+    "mockjs": "^1.0.1-beta3"
+  }
+}

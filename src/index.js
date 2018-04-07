@@ -1,0 +1,48 @@
+/*var express = require('express');*/
+
+
+import express from 'express'
+var bodyParser = require('body-parser');
+
+var routes = require("./routes");
+
+var app = express();
+
+app.use(bodyParser.json({limit: '1mb'}));  //body-parser 解析json格式数据
+app.use(bodyParser.urlencoded({            //此项必须在 bodyParser.json 下面,为参数编码
+  extended: true
+}));
+
+/*app.get('/Zbasic/login.do', function (req, res) {
+	
+	var a = {
+		name: 'zzp',
+		age: 16
+	}
+	
+  res.send(a);
+});
+
+app.post('/Zbasic/login.do', function (req, res) {
+	var a = {
+		name: 'zzp',
+		age: 16,
+		methods: 'POST'
+	}
+	
+	const {account, password} = req.body
+	console.log(account + ': ' + password)
+	console.log(JSON.stringify(req.body))
+
+  	res.send(a);
+})*/
+
+routes(app);
+
+
+var server = app.listen(4000, function () {
+  var host = server.address().address;
+  var port = server.address().port;
+
+  console.log('Example app listening at http://%s:%s', host, port);
+});
