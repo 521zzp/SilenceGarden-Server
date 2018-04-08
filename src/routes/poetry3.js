@@ -11,6 +11,7 @@ module.exports = function (app) {
 	
 	app.get(serverRestful(GET_POEM), function (req, res) {
 		const title = req.params.title
+		console.log("获取文章:"+ title);
 		if (title) { 
 			const resourcePromise = pool.acquire();
 			resourcePromise.then(function(db) {
@@ -40,7 +41,7 @@ module.exports = function (app) {
 	});
 
 	app.get(GET_POETRY_CATALOG, function (req, res) {
-		const title = req.params.title
+		console.log("获取目录:");
 		const resourcePromise = pool.acquire();
 		resourcePromise.then(function(db) {
 		    var dbo = db.db("silencegarden");
@@ -48,6 +49,7 @@ module.exports = function (app) {
 		        if (err) {
 		        	res.send(resultWrap({}, '系统异常，请稍后再试', false))
 		        } else{
+		        	console.log(result);
 		        	if (result.length>0) {
 		        		res.send(resultWrap(result))
 		        	} else {

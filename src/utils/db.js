@@ -11,7 +11,6 @@ const pool = generic.createPool({
     'log': false,           // 是否console.log输出日志
     // 创建连接方法
     'create':  function (callback) {
-        console.log('pool.mongodb.create--->')
 
         const db = new Promise(function(resolve, reject) {
 		  // ... some code

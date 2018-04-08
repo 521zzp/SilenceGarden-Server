@@ -4,7 +4,9 @@
   "description": "silencegarden server simulation datas",
   "main": "index.js",
   "scripts": {
-    "dev": "babel-node src/index.js"
+    "dev": "babel-node src/index.js",
+    "start": "nodemon src/index.js --exec babel-node --presets es2015,stage-2",
+    "build": "babel src -d dist --presets es2015,stage-2"
   },
   "keywords": [
     "silencegarden"
@@ -15,17 +17,21 @@
     "body-parser": "^1.17.2",
     "express": "^4.15.4",
     "generic-pool": "^3.4.2",
-    "mongodb": "^3.0.5",
-    "mysql": "^2.14.1"
+    "mongodb": "^3.0.5"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.4",
     "babel-plugin-transform-es2015-destructuring": "^6.23.0",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.26.0",
     "babel-plugin-transform-es2015-parameters": "^6.24.1",
     "babel-plugin-transform-es2015-spread": "^6.22.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
     "babel-plugin-transform-strict-mode": "^6.24.1",
-    "mockjs": "^1.0.1-beta3"
+    "json-loader": "^0.5.7",
+    "mockjs": "^1.0.1-beta3",
+    "nodemon": "^1.17.3",
+    "webpack-cli": "^2.0.14"
   }
 }
