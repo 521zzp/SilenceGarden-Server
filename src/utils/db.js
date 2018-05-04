@@ -2,6 +2,7 @@ var MongoClient = require('mongodb').MongoClient;
 import { MONGODB_USER, MONGODB_PWD, MONGODB_IP, MONGODB_PORT, MONGODB_DB } from '../config/config'
 var generic = require('generic-pool');
 var url = `mongodb://${MONGODB_USER}:${MONGODB_PWD}@${MONGODB_IP}:${MONGODB_PORT}${MONGODB_DB}`;
+import { resultWrap } from '../utils/net'
 
 const pool = generic.createPool({
     'name': 'mongodb-pool',   // 连接池名称
@@ -35,4 +36,15 @@ const pool = generic.createPool({
     }
 });
 
-export { pool }
+const dbOperate = (cb) => {
+    const result = new Promise(function (resolve, reject) {
+        cb(resolve, reject)
+    })  
+    return result
+}
+
+const singleFilter = (result) => {
+    return result.length > 0 ? resultWrap(result[0]) : resultWrap({}, '查询失败，无该记录(╥╯^╰╥)！', false)
+}
+
+export { pool, dbOperate, singleFilter }

@@ -1,7 +1,8 @@
-import { GET_MELODY } from '../config/url'
+import { GET_MELODY, GET_MELODY_CATALOG, GET_MELODY_RANDOM } from '../config/url'
 import { serverRestful } from '../utils/net'
 import { resultWrap } from '../utils/net'
-import { pool } from '../utils/db'
+import { pool, dbOperat, singleFilter } from '../utils/db'
+import Mock from 'mockjs'
 
 
 
@@ -9,35 +10,162 @@ import { pool } from '../utils/db'
 
 module.exports = function (app) {
 	
-	app.get(serverRestful(GET_MELODY), function (req, res) {
-		const id = req.params.id
-		console.log("获取曲子:"+ id);
+
+	app.get(GET_MELODY_CATALOG, function (req, res) {
+		console.log("获取曲子目录:");
+
+		const resourcePromise = pool.acquire();
+		resourcePromise.then(async function(db) {
+		    var dbo = db.db("silencegarden");
+		    const result = await new Promise(function (resolve, reject) {
+		    	try {
+		    		dbo.collection("music").find().project({ _id: 1, name: 1 }).toArray(function(err, datas) { // 返回集合中所有数据
+				        if (err) {
+				        	reject()
+				        } else{
+				        	resolve(datas)
+				        }
+			    	})
+		    	} finally {
+		    		pool.release(db);
+				    console.log('已释放连接')
+		    	}
+		    });
+		    res.send(resultWrap(result))
+			
+		}).catch(function(err) {
+		    res.send(resultWrap({}, '查询不知道怎么就中断了o(╥﹏╥)o', false))
+		});
 		
-		if (id == 1) { 
-			const obj = {
-				name: '爱的忧伤',
-				src:   '/assets/audio/爱的忧伤-低音质.mp3',
-				img: '四月是你的谎言.png',
-				bg_img: '四月是你的谎言-bg.jpg',
-			} 
-			res.send(resultWrap(obj))
-		} else if (id == 2){
-			const obj = {
-				name: '汐',
-				src:   '/assets/audio/汐.mp3',
-				img: 'Clannad-汐.png',
-				bg_img: 'clannad0313.jpg',
-			} 
-			res.send(resultWrap(obj))
-		} else {
-			const obj = {
-				name: '神秘园之歌',
-				src:   '/assets/audio/10 Song From A Secret Garden.mp3',
-				img: 'disk-song-from-a-secret-garden.png',
-				bg_img: 'secret-garden-bg.jpg',
-			} 
-			res.send(resultWrap(obj))
+	});
+
+	//随机播放等
+	app.get(serverRestful(GET_MELODY_RANDOM), function (req, res) {
+		
+		let id;
+		try {
+			id = req.params.id
+			console.log("获取曲子:"+ id);
+		} catch (e) {
+			res.send(resultWrap({}, '不要乱查询凸(艹皿艹 )', false))
 		}
+
+		if (id) {
+
+			const resourcePromise = pool.acquire();
+			resourcePromise.then(async function(db) {
+			    var dbo = db.db("silencegarden");
+
+			    const list = await new Promise(function (resolve, reject) {
+			    	try {
+			    		dbo.collection("music").find().toArray(function(err, datas) { // 返回集合中所有数据
+					        if (err) {
+					        	console.log(err)
+					        	reject()
+					        } else{
+					        	resolve(datas)
+					        }
+				    	})
+			    	} catch (e) {
+			    		reject()
+			    	} finally {
+			    		pool.release(db);
+			    		console.log('finally release')
+			    	}
+			    });
+			    let result;
+			    const curernt_violin = list.filter((item) => item._id.toString() === id)
+			    if (curernt_violin.length === 1) {
+
+			    	const index = list.indexOf(curernt_violin[0])
+					list.splice(index, 1)
+			    	const obj = Mock.mock({
+					  [`target|0-${list.length}`]: 0
+					})
+					console.log('随机播放：')
+					console.log(obj)
+			    	result = list[obj.target]
+			    } else {
+			    	res.send(resultWrap({}, '没有该数据╮(╯﹏╰）╭', false))
+			    }
+
+			    console.log('获取结果')
+			    res.send(resultWrap(result))
+				
+			}).catch(function(err) {
+				console.log(err)
+			    res.send(resultWrap({}, '查询不知道怎么就中断了o(╥﹏╥)o', false))
+			});
+		} else {
+			res.send(resultWrap({}, '不要乱查询凸(艹皿艹 )', false))
+		}
+
+		
+		
+	});
+
+	app.get(serverRestful(GET_MELODY), function (req, res) {
+		
+		let id;
+		try {
+			id = req.params.id
+			console.log("获取曲子:"+ id);
+		} catch (e) {
+			res.send(resultWrap({}, '不要乱查询凸(艹皿艹 )', false))
+		}
+
+		const resourcePromise = pool.acquire();
+		resourcePromise.then(async function(db) {
+		    var dbo = db.db("silencegarden");
+
+		    /*const result = await dbOperate(function (resolve, reject) {
+		    	dbo.collection("music").find().project({ _id: 0}).toArray(function(err, datas) { // 返回集合中所有数据
+			        console.log('查询结束————————————————————————————————————————————————————')
+			        if (err) {
+			        	resolve(resultWrap({}, '系统异常，请稍后再试1', false))
+			        } else{
+			        	resolve(datas)
+			        }
+			         pool.release(db);
+		    	})
+		    })*/
+
+		    const result = await new Promise(function (resolve, reject) {
+		    	try {
+		    		dbo.collection("music").find().toArray(function(err, datas) { // 返回集合中所有数据
+				        if (err) {
+				        	console.log(err)
+				        	reject()
+				        } else{
+				        	resolve(datas)
+				        }
+			    	})
+		    	} catch (e) {
+		    		reject()
+		    	} finally {
+		    		pool.release(db);
+		    		console.log('finally release')
+		    	}
+		    });
+		    const current = result.filter((item) => item._id.toString() === id)[0]
+
+		    if (current) {
+		    	const index = result.indexOf(current)
+		    	const last = index === 0 ? '' : result[index - 1]._id
+		    	const next = index === result.length - 1 ? '' : result[index + 1]._id
+		    	res.send(resultWrap({ melody: current, last, next }))
+		    	return;
+		    } else {
+		    	res.send(resultWrap({}, '根本不存在的曲子o(╥﹏╥)o', false))
+		    	return;
+		    }
+		    console.log('获取结果')
+		    res.send(singleFilter(result))
+			
+		}).catch(function(err) {
+			console.log(err)
+		    res.send(resultWrap({}, '查询不知道怎么就中断了o(╥﹏╥)o', false))
+		});
 		
 	});
 
