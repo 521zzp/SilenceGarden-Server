@@ -18,11 +18,14 @@ module.exports = function (app) {
 		resourcePromise.then(async function(db) {
 		    var dbo = db.db("silencegarden");
 		    const result = await new Promise(function (resolve, reject) {
+		    	console.log('开始查询')
 		    	try {
 		    		dbo.collection("music").find().project({ _id: 1, name: 1 }).toArray(function(err, datas) { // 返回集合中所有数据
 				        if (err) {
 				        	reject()
 				        } else{
+				        	console.log('查询结果')
+				        	console.log(datas)
 				        	resolve(datas)
 				        }
 			    	})
