@@ -20,7 +20,7 @@ module.exports = function (app) {
 		    const result = await new Promise(function (resolve, reject) {
 		    	console.log('开始查询')
 		    	try {
-		    		dbo.collection("music").find().project({ _id: 1, name: 1 }).toArray(function(err, datas) { // 返回集合中所有数据
+		    		dbo.collection("music").find().project({ _id: 1, name: 1, album: 1, tag: 1, disk_img: 1 }).toArray(function(err, datas) { // 返回集合中所有数据
 				        if (err) {
 				        	reject()
 				        } else{
@@ -83,7 +83,7 @@ module.exports = function (app) {
 			    	const index = list.indexOf(curernt_violin[0])
 					list.splice(index, 1)
 			    	const obj = Mock.mock({
-					  [`target|0-${list.length}`]: 0
+					  [`target|0-${list.length - 1}`]: 0
 					})
 					console.log('随机播放：')
 					console.log(obj)
