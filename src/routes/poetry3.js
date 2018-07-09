@@ -1,6 +1,5 @@
 import { GET_POEM, GET_POETRY_CATALOG } from '../config/url'
-import { serverRestful } from '../utils/net'
-import { resultWrap } from '../utils/net'
+import { resultWrap, serverRestful } from '../utils/net'
 import { pool } from '../utils/db'
 
 
@@ -11,7 +10,7 @@ module.exports = function (app) {
 	
 	app.get(serverRestful(GET_POEM), function (req, res) {
 		const title = req.params.title
-		console.log("获取文章:"+ title);
+		console.log("获取诗词:"+ title);
 		if (title) { 
 			const resourcePromise = pool.acquire();
 			resourcePromise.then(function(db) {
