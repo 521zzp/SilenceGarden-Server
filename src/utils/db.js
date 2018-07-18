@@ -1,8 +1,7 @@
 var MongoClient = require('mongodb').MongoClient;
 import { MONGODB_USER, MONGODB_PWD, MONGODB_IP, MONGODB_PORT, MONGODB_DB } from '../config/config'
 var generic = require('generic-pool');
-//var url = `mongodb://${MONGODB_USER}:${MONGODB_PWD}@${MONGODB_IP}:${MONGODB_PORT}${MONGODB_DB}`;
-var url = 'mongodb://zzp:my_garden@47.96.93.131:27017'
+var url = `mongodb://${MONGODB_USER}:${MONGODB_PWD}@${MONGODB_IP}:${MONGODB_PORT}${MONGODB_DB}`;
 import { resultWrap } from '../utils/net'
 
 const pool = generic.createPool({
