@@ -13,6 +13,15 @@ app.use(bodyParser.urlencoded({            //此项必须在 bodyParser.json 下
   extended: true
 }));
 
+/*
+ *拦截器写法1	
+ */
+/*app.use(function (req, res, next) {
+    var url = req.originalUrl;
+    console.log('拦截器_________________________', url)
+    next();
+});*/
+
 /*app.get('/Zbasic/login.do', function (req, res) {
 	
 	var a = {
