@@ -1,21 +1,32 @@
-var poetry3 = require("./poetry3");
+var poetry = require("./poetry");
 var violin = require("./violin");
 var article = require("./article");
-import { authLogin } from '../utils/auth'
+var login = require("./login");
+import { resultWrap } from '../utils/net'
+
+import { authVali } from '../utils/auth'
+import { BASEURL, AUTH } from '../config/url'
 
 module.exports =  function(app){
-	app.all('*', async function (req, res , next) {
+	app.all(BASEURL + AUTH + '/*', async function (req, res , next) {
 		var url = req.originalUrl;
 		console.log('拦截器————————————————————————————', url)
-		var user_vali = await authLogin('zzp', '123456')
-		if (user_vali) {
-			next();
+		const uuid = req.cookies.uuid
+		if (uuid) {
+			var user_vali = await authVali(uuid)
+			if (user_vali) {
+				next();
+			} else {
+				res.send(resultWrap({}, '您还未登录', 101))
+			}
 		} else {
-			res.send({ code: 100, data: { msg: '无此用户' } })
+			res.send(resultWrap({}, '您还未登录', 101))
 		}
 		
+		
 	});
-    poetry3(app);  
+    poetry(app);  
     violin(app);
     article(app);
+    login(app);
 }

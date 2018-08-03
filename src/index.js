@@ -3,6 +3,7 @@
 
 import express from 'express'
 var bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser')
 
 var routes = require("./routes");
 
@@ -12,6 +13,7 @@ app.use(bodyParser.json({limit: '1mb'}));  //body-parser 解析json格式数据
 app.use(bodyParser.urlencoded({            //此项必须在 bodyParser.json 下面,为参数编码
   extended: true
 }));
+app.use(cookieParser())
 
 /*
  *拦截器写法1	

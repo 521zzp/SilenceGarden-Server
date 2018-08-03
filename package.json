@@ -16,6 +16,7 @@
   "license": "MIT",
   "dependencies": {
     "body-parser": "^1.17.2",
+    "cookie-parser": "^1.4.3",
     "express": "^4.15.4",
     "formidable": "^1.2.1",
     "generic-pool": "^3.4.2",
